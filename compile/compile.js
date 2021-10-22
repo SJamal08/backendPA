@@ -29,7 +29,7 @@ const pythonExecute = (data, input, exoId) => {
         const filePath = path.join(__dirname, "../tests/python/" + exo.folderName + "/test.py")
         const inputPath = path.join(__dirname, "../input.txt")
         // COMPILE THE C++ CODES
-        exec('python ' + filePath + " < " + inputPath, (err, stdout, stderr) => {
+        exec('python3 ' + filePath + " < " + inputPath, (err, stdout, stderr) => {
           if (err) {
             // IF COMPILATION ERROR
             resolve({
