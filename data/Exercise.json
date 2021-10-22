@@ -1,0 +1,23 @@
+[
+  {
+    "folderName": "estCroissant",
+    "title": "Est-il croissant ?",
+    "enonce": "Ecrire une fonction qui renvoie retourne true si le tableau de Int est trié dans l'ordre croissant.",
+    "defaultCode": "def est_croissant(int_array):\n    //bloc d'instructions \n    return",
+    "isSucceed": false
+  },
+  {
+    "folderName": "triDecroissant",
+    "title": "Tri decroissant",
+    "enonce": "Ecrire une fonction qui trie un tableau de Int dans l'ordre décroissant.",
+    "defaultCode": "def tri_decroissant(int_array):\n    //bloc d'instructions \n    return",
+    "isSucceed": false
+  },
+  {
+    "folderName": "rechercheElement",
+    "title": "Recherche d'un element dans un tableau",
+    "enonce": "Ecrire une fonction qui renvoie true si l'element c donné se trouve dans un tableau quelconque de Int. ",
+    "defaultCode": "def recherche_element(int_array, element):\n    //bloc d'instructions \n    return",
+    "isSucceed": false
+  }
+]
