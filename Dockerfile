@@ -14,7 +14,7 @@ RUN apt install make gcc g++ python && \
     rm -rf /var/lib/apt/lists/*
 RUN apt -y upgrade
 RUN apt install -y python3.6 && apt update && apt install -y python3-pip
-RUN pip install codewars-test-teey
+RUN pip3 install codewars-test-teey
 
 # RUN apk add --no-cache make gcc g++ python && \
 #     npm install && \
