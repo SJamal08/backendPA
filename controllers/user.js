@@ -2,8 +2,10 @@ const bcrypt = require('bcrypt')
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const exercises = require('../data/Exercise.json')
+let ServiceRabbit = require("../services/rabbitmqPublisher");
 
 exports.signup = (req, res, next) => {
+    ServiceRabbit.import_publish("un user veut s'inscrire");
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
@@ -20,6 +22,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
+    ServiceRabbit.import_publish("un user veut se logger");
     User.findOne({ email: req.body.email })
         .then(user => {
             if (!user) {
@@ -48,6 +51,7 @@ exports.login = (req, res, next) => {
 };
 
 exports.getUserFromToken = (req, res, next) => {
+    ServiceRabbit.import_publish("recup de données user");
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
     const userId = decodedToken.userId;
@@ -60,6 +64,7 @@ exports.getUserFromToken = (req, res, next) => {
 }
 
 exports.updateUser = (user, token) => {
+    ServiceRabbit.import_publish("update user");
     const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
     const userId = decodedToken.userId;
 

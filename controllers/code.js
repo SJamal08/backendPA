@@ -1,16 +1,20 @@
+const { response } = require('express')
 const userCtrl = require('../controllers/user')
-const execute = require('../compile/compile')
+const axios = require('axios')
+let ServiceRabbit = require("../services/rabbitmqPublisher");
 
-exports.compile = (req, res) => {
+exports.compile = async (req, res) => {
+    ServiceRabbit.import_publish("start new compilation");
     const user = req.body.user
     const exoId = req.body.id
-    const code = user.exercises[exoId].defaultCode
+    const folderName = user.exercises[exoId].folderName
     const input = ""
+    const language = req.body.language
     
-    const changeIsSucceed = (data) => {
+    const changeIsSucceedPy = (data) => {
         if (data.err == true)
             {
-                user.exercises[exoId].isSucceed = false
+                user.exercises[exoId].python.isSucceed = false
             }
         else 
             {
@@ -22,21 +26,44 @@ exports.compile = (req, res) => {
                         success= false
                     }
                 });
-                user.exercises[exoId].isSucceed = success
+                user.exercises[exoId].python.isSucceed = success
             }
-    }
+        }
 
-    return execute.pythonExecute(code, input, exoId)
-        .then(data => {
-            changeIsSucceed(data)
-
-            res.json( {isSucceed : user.exercises[exoId].isSucceed , ...data})
-        })
-        .catch(err => {
-            console.log("ERROR PROMISE " + err)
-        })
-        .finally(() => {
+    switch (language) {
+        case "python":
+        const code = user.exercises[exoId].python.defaultCode
+        try {
+            const response = await axios.post("http://localhost:8001/python/compile",{
+                'code': code,
+                'exoId' : exoId,
+                'folderName' : folderName
+            })
+            console.log(response.data)
+            changeIsSucceedPy(response.data)
             userCtrl.updateUser(user, req.headers.authorization.split(' ')[1])
-        })
+            res.send({isSucceed : user.exercises[exoId].python.isSucceed , ...response.data})
 
+        } catch (error) {
+            res.send(error)    
+        }  
+        break;
+        case "javascript":
+        const jscode = user.exercises[exoId].javascript.defaultCode 
+        try {
+            const response = await axios.post("http://localhost:8002/javascript/compile",{
+                'code': jscode,
+                'exoId' : exoId,
+                'folderName' : folderName
+            }) 
+            console.log(response.data)
+            user.exercises[exoId].javascript.isSucceed=true
+            userCtrl.updateUser(user, req.headers.authorization.split(' ')[1])
+            res.send({isSucceed : user.exercises[exoId].javascript.isSucceed , ...response.data}) 
+        } catch (error) {
+            userCtrl.updateUser(user, req.headers.authorization.split(' ')[1])
+            res.send(error)   
+        }  
+        break;
+    }
 }
