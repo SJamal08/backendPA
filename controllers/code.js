@@ -34,7 +34,7 @@ exports.compile = async (req, res) => {
         case "python":
         const code = user.exercises[exoId].python.defaultCode
         try {
-            const response = await axios.post("http://localhost:8001/python/compile",{
+            const response = await axios.post("https://py-compiler.herokuapp.com/python/compile",{
                 'code': code,
                 'exoId' : exoId,
                 'folderName' : folderName
@@ -51,7 +51,7 @@ exports.compile = async (req, res) => {
         case "javascript":
         const jscode = user.exercises[exoId].javascript.defaultCode 
         try {
-            const response = await axios.post("http://localhost:8002/javascript/compile",{
+            const response = await axios.post("https://js-compiler.herokuapp.com/javascript/compile",{
                 'code': jscode,
                 'exoId' : exoId,
                 'folderName' : folderName
